@@ -36,10 +36,10 @@ concept IsSanitizingAllocator = std::is_base_of<SanitizingAllocator<typename T::
 
 
 template <typename T, IsSanitizingAllocator Alloc = SanitizingAllocator<T>>
-class vector_secure : public std::vector<T, SanitizingAllocator<T>>
+class vector_secure : public std::vector<T, Alloc>
 {
 public:
-    using std::vector<T, SanitizingAllocator<T>>::vector;
+    using std::vector<T, Alloc>::vector;
 };
 
 
