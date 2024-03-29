@@ -31,8 +31,11 @@ public:
     }
 };
 
+template<typename T>
+concept IsSanitizingAllocator = std::is_base_of<SanitizingAllocator<typename T::value_type>, T>::value;
 
-template <typename T, typename A = SanitizingAllocator<T>>
+
+template <typename T, IsSanitizingAllocator Alloc = SanitizingAllocator<T>>
 class vector_secure : public std::vector<T, SanitizingAllocator<T>>
 {
 public:
