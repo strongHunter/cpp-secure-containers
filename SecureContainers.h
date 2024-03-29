@@ -19,7 +19,7 @@ public:
         typedef SanitizingAllocator<U> other;
     };
 
-    void cleanse(T* p, size_t n)
+    virtual void cleanse(T* p, size_t n)
     {
         burn(p, n * sizeof(T));
     }
