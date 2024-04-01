@@ -3,6 +3,9 @@
 
 #include "SecureContainers.h"
 
+static const char* _15SymbolsString = "0123456789abcde";
+static const char* _16SymbolsString = "0123456789abcdef";
+
 using testing::_;
 
 template <typename T>
@@ -70,14 +73,14 @@ TEST_F(StaticSanitizeTest, ShouldCall_Sanitize_ForEmptyString)
 
 TEST_F(StaticSanitizeTest, ShouldCall_Sanitize_For15SymbolsString)
 {
-    basic_string_secure<char, SanitizingAllocatorChild<char>> str = "0123456789abcde";
+    basic_string_secure<char, SanitizingAllocatorChild<char>> str = _15SymbolsString;
 
     EXPECT_CALL(*mock, calledFromSanitize(_, _)).Times(1);
 }
 
 TEST_F(StaticSanitizeTest, ShouldNotCall_Sanitize_For16SymbolsString)
 {
-    basic_string_secure<char, SanitizingAllocatorChild<char>> str = "0123456789abcdef";
+    basic_string_secure<char, SanitizingAllocatorChild<char>> str = _16SymbolsString;
 
     EXPECT_CALL(*mock, calledFromSanitize(_, _)).Times(0);
 }
