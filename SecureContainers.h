@@ -19,9 +19,14 @@ public:
         typedef SanitizingAllocator<U> other;
     };
 
-    virtual void cleanse(T* p, size_t n)
+    static void sanitize(T* p, size_t n)
     {
         burn(p, n * sizeof(T));
+    }
+
+    virtual void cleanse(T* p, size_t n)
+    {
+        sanitize(p, n);
     }
 
     void deallocate(T* p, size_t n)
@@ -43,11 +48,11 @@ public:
 };
 
 
-template <typename T, typename A = SanitizingAllocator<T>>
-class basic_string_secure : public std::basic_string<T, std::char_traits<T>, SanitizingAllocator<T>>
+template <typename T, IsSanitizingAllocator Alloc = SanitizingAllocator<T>>
+class basic_string_secure : public std::basic_string<T, std::char_traits<T>, Alloc>
 {
 public:
-    using std::basic_string<T, std::char_traits<T>, SanitizingAllocator<T>>::basic_string;
+    using std::basic_string<T, std::char_traits<T>, Alloc>::basic_string;
 
     /**
      * \fn  ~basic_string_secure()
@@ -64,7 +69,7 @@ public:
     {
         auto n = this->size();
         if (n < 16) {
-            this->get_allocator().cleanse(this->data(), n);
+            Alloc::sanitize(this->data(), n);
         }
     }
 };

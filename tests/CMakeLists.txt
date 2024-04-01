@@ -11,3 +11,4 @@ endmacro(compile_output_test)
 
 compile_output_test(SanitizingAllocatorTest)
 compile_output_test(VectorSecureTest)
+compile_output_test(StringSecureTest)
