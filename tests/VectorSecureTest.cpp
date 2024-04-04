@@ -77,3 +77,15 @@ TEST_F(VectorSecureConstructorsTest, OtherMoveConstructorShouldMakeMovedVectorEm
     EXPECT_TRUE(vec_.empty());
     EXPECT_EQ(ptr1, ptr2);
 }
+
+TEST_F(VectorSecureConstructorsTest, MoveAssignmentOperatorShouldMakeMovedVectorEmpty)
+{
+    uint8_t* ptr1 = vec_.data();
+    uint8_t* ptr2;
+
+    vector_secure<uint8_t> moved = std::move(vec_);
+    ptr2 = moved.data();
+
+    EXPECT_TRUE(vec_.empty());
+    EXPECT_EQ(ptr1, ptr2);
+}
