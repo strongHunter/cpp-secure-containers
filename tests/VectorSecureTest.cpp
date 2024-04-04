@@ -65,7 +65,7 @@ TEST_F(VectorSecureConstructorsTest, MoveConstructorShouldMakeMovedVectorEmpty)
     EXPECT_EQ(ptr1, ptr2);
 }
 
-TEST_F(VectorSecureConstructorsTest, OtherMoveConstructorShouldMakeMovedVectorEmpty)
+TEST_F(VectorSecureConstructorsTest, MoveConstructorWithAllocatorShouldMakeMovedVectorEmpty)
 {
     SanitizingAllocator<uint8_t> allocator;
     uint8_t* ptr1 = vec_.data();
