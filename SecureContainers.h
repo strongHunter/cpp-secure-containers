@@ -59,6 +59,36 @@ public:
         std::vector<T, Alloc>::operator=(std::move(other));
         return *this;
     }
+
+    template<class InputIt>
+    [[nodiscard]] static vector_secure copy(InputIt first, InputIt last, const Alloc& alloc = Alloc())
+    {
+        return vector_secure(first, last, alloc);
+    }
+
+    [[nodiscard]] static vector_secure copy(const vector_secure& other)
+    {
+        return vector_secure(other);
+    }
+
+    [[nodiscard]] static vector_secure copy(const vector_secure& other, const Alloc& alloc)
+    {
+        return vector_secure(other, alloc);
+    }
+
+protected:
+    template<class InputIt>
+    constexpr vector_secure(InputIt first, InputIt last, const Alloc& alloc = Alloc())
+            : std::vector<T, Alloc>(first, last, alloc)
+    {}
+
+    constexpr vector_secure(const vector_secure& other)
+            : std::vector<T, Alloc>(other)
+    {}
+
+    constexpr vector_secure(const vector_secure& other, const Alloc& alloc)
+            : std::vector<T, Alloc>(other, alloc)
+    {}
 };
 
 
