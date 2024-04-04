@@ -45,6 +45,20 @@ class vector_secure : public std::vector<T, Alloc>
 {
 public:
     using std::vector<T, Alloc>::vector;
+
+    constexpr vector_secure(vector_secure&& other) noexcept
+        : std::vector<T, Alloc>(std::move(other))
+    {}
+
+    constexpr vector_secure(vector_secure&& other, const Alloc& alloc)
+        : std::vector<T, Alloc>(std::move(other), alloc)
+    {}
+
+    constexpr vector_secure& operator=(vector_secure&& other) noexcept
+    {
+        std::vector<T, Alloc>::operator=(std::move(other));
+        return *this;
+    }
 };
 
 
