@@ -52,3 +52,28 @@ TEST_F(VectorSecureConstructorsTest, InitializerListConstructorShouldBeOk)
     EXPECT_TRUE(std::equal(vec_.cbegin(), vec_.cend(),
                            INIT_DATA.begin(), INIT_DATA.end()));
 }
+
+TEST_F(VectorSecureConstructorsTest, MoveConstructorShouldMakeMovedVectorEmpty)
+{
+    uint8_t* ptr1 = vec_.data();
+    uint8_t* ptr2;
+
+    vector_secure<uint8_t> moved(std::move(vec_));
+    ptr2 = moved.data();
+
+    EXPECT_TRUE(vec_.empty());
+    EXPECT_EQ(ptr1, ptr2);
+}
+
+TEST_F(VectorSecureConstructorsTest, OtherMoveConstructorShouldMakeMovedVectorEmpty)
+{
+    SanitizingAllocator<uint8_t> allocator;
+    uint8_t* ptr1 = vec_.data();
+    uint8_t* ptr2;
+
+    vector_secure<uint8_t> moved(std::move(vec_), allocator);
+    ptr2 = moved.data();
+
+    EXPECT_TRUE(vec_.empty());
+    EXPECT_EQ(ptr1, ptr2);
+}
