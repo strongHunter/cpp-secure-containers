@@ -89,3 +89,43 @@ TEST_F(VectorSecureConstructorsTest, MoveAssignmentOperatorShouldMakeMovedVector
     EXPECT_TRUE(vec_.empty());
     EXPECT_EQ(ptr1, ptr2);
 }
+
+TEST_F(VectorSecureConstructorsTest, MethodCopyShouldCopiesDataCorrectly)
+{
+    uint8_t* ptr1 = vec_.data();
+    uint8_t* ptr2;
+
+    vector_secure<uint8_t> copied = vector_secure<uint8_t>::copy(vec_);
+    ptr2 = copied.data();
+
+    EXPECT_NE(ptr1, ptr2);
+    EXPECT_TRUE(std::equal(vec_.cbegin(), vec_.cend(),
+                           copied.begin(), copied.end()));
+}
+
+TEST_F(VectorSecureConstructorsTest, MethodCopyWithAllocatorShouldCopiesDataCorrectly)
+{
+    SanitizingAllocator<uint8_t> allocator;
+    uint8_t* ptr1 = vec_.data();
+    uint8_t* ptr2;
+
+    vector_secure<uint8_t> copied = vector_secure<uint8_t>::copy(vec_, allocator);
+    ptr2 = copied.data();
+
+    EXPECT_NE(ptr1, ptr2);
+    EXPECT_TRUE(std::equal(vec_.cbegin(), vec_.cend(),
+                           copied.begin(), copied.end()));
+}
+
+TEST_F(VectorSecureConstructorsTest, MethodCopyByIteratorsShouldCopiesDataCorrectly)
+{
+    uint8_t* ptr1 = vec_.data();
+    uint8_t* ptr2;
+
+    vector_secure<uint8_t> copied = vector_secure<uint8_t>::copy(vec_.cbegin(), vec_.cend());
+    ptr2 = copied.data();
+
+    EXPECT_NE(ptr1, ptr2);
+    EXPECT_TRUE(std::equal(vec_.cbegin(), vec_.cend(),
+                           copied.begin(), copied.end()));
+}
