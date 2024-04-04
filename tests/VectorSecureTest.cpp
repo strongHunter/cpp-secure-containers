@@ -46,6 +46,14 @@ protected:
     vector_secure<uint8_t> vec_;
 };
 
+template <typename T>
+testing::AssertionResult VectorsEqual(const vector_secure<T>& l, const vector_secure<T>& r)
+{
+    return std::equal(l.cbegin(), l.cend(), r.cbegin(), r.cend()) ?
+        testing::AssertionSuccess()
+        : testing::AssertionFailure() << "Vectors not equal";
+}
+
 
 TEST_F(VectorSecureConstructorsTest, InitializerListConstructorShouldBeOk)
 {
@@ -99,8 +107,7 @@ TEST_F(VectorSecureConstructorsTest, MethodCopyShouldCopiesDataCorrectly)
     ptr2 = copied.data();
 
     EXPECT_NE(ptr1, ptr2);
-    EXPECT_TRUE(std::equal(vec_.cbegin(), vec_.cend(),
-                           copied.begin(), copied.end()));
+    EXPECT_TRUE(VectorsEqual(vec_, copied));
 }
 
 TEST_F(VectorSecureConstructorsTest, MethodCopyWithAllocatorShouldCopiesDataCorrectly)
@@ -113,8 +120,7 @@ TEST_F(VectorSecureConstructorsTest, MethodCopyWithAllocatorShouldCopiesDataCorr
     ptr2 = copied.data();
 
     EXPECT_NE(ptr1, ptr2);
-    EXPECT_TRUE(std::equal(vec_.cbegin(), vec_.cend(),
-                           copied.begin(), copied.end()));
+    EXPECT_TRUE(VectorsEqual(vec_, copied));
 }
 
 TEST_F(VectorSecureConstructorsTest, MethodCopyByIteratorsShouldCopiesDataCorrectly)
@@ -126,6 +132,5 @@ TEST_F(VectorSecureConstructorsTest, MethodCopyByIteratorsShouldCopiesDataCorrec
     ptr2 = copied.data();
 
     EXPECT_NE(ptr1, ptr2);
-    EXPECT_TRUE(std::equal(vec_.cbegin(), vec_.cend(),
-                           copied.begin(), copied.end()));
+    EXPECT_TRUE(VectorsEqual(vec_, copied));
 }
