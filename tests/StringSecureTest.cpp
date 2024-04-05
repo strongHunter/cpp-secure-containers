@@ -89,3 +89,51 @@ TEST_F(StaticSanitizeTest, ShouldNotCall_Sanitize_For16SymbolsString)
 
     EXPECT_CALL(*mock, calledFromSanitize(_, _)).Times(0);
 }
+
+
+class StringSecureConstructorTest : public testing::Test {
+protected:
+    void SetUp()
+    {
+        str_ = string_secure("1234567890abcdef");
+    }
+
+    string_secure str_;
+};
+
+TEST_F(StringSecureConstructorTest, MoveConstructorShouldMakeMovedStringEmpty)
+{
+    char* ptr1 = str_.data();
+    char* ptr2;
+
+    string_secure moved(std::move(str_));
+    ptr2 = moved.data();
+
+    EXPECT_TRUE(str_.empty());
+    EXPECT_EQ(ptr1, ptr2);
+}
+
+TEST_F(StringSecureConstructorTest, MoveConstructorWithAllocatorShouldMakeMovedStringEmpty)
+{
+    SanitizingAllocator<char> allocator;
+    char* ptr1 = str_.data();
+    char* ptr2;
+
+    string_secure moved(std::move(str_), allocator);
+    ptr2 = moved.data();
+
+    EXPECT_TRUE(str_.empty());
+    EXPECT_EQ(ptr1, ptr2);
+}
+
+TEST_F(StringSecureConstructorTest, MoveAssignmentOperatorShouldMakeMovedStringEmpty)
+{
+    char* ptr1 = str_.data();
+    char* ptr2;
+
+    string_secure moved = std::move(str_);
+    ptr2 = moved.data();
+
+    EXPECT_TRUE(str_.empty());
+    EXPECT_EQ(ptr1, ptr2);
+}
