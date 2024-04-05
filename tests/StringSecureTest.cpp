@@ -22,6 +22,11 @@ class SanitizingAllocatorChild : public SanitizingAllocator<T> {
 public:
     using SanitizingAllocator<T>::SanitizingAllocator;
 
+    template<typename U>
+    struct rebind {
+        typedef SanitizingAllocatorChild<U> other;
+    };
+
     static void sanitize(T* p, size_t n)
     {
         if (mock)

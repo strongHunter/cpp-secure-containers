@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <cstdint>
 #include <sstream>
 
 inline void hexPrint(const void* ptr, size_t size)
