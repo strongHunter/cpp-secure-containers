@@ -98,6 +98,20 @@ class basic_string_secure : public std::basic_string<T, std::char_traits<T>, All
 public:
     using std::basic_string<T, std::char_traits<T>, Alloc>::basic_string;
 
+    constexpr basic_string_secure(basic_string_secure&& other) noexcept
+        : std::basic_string<T, std::char_traits<T>, Alloc>(std::move(other))
+    {}
+
+    constexpr basic_string_secure(basic_string_secure&& other, const Alloc& alloc)
+        : std::basic_string<T, std::char_traits<T>, Alloc>(std::move(other), alloc)
+    {}
+
+    constexpr basic_string_secure& operator=(basic_string_secure&& str) noexcept
+    {
+        std::basic_string<T, std::char_traits<T>, Alloc>::operator=(std::move(str));
+        return *this;
+    }
+
     /**
      * \fn  ~basic_string_secure()
      * \brief Custom destructor that clear memory for short strings
