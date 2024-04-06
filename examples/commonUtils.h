@@ -16,6 +16,9 @@ inline void hexPrint(const void* ptr, size_t size)
         if ((i + 1) % 16 == 0)
             std::cout << std::endl;
     }
+
+    if (size < 16)
+        std::cout << std::endl;
 }
 
 inline std::string printAddress(const void* ptr)
