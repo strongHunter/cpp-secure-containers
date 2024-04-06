@@ -97,6 +97,7 @@ class basic_string_secure : public std::basic_string<T, std::char_traits<T>, All
 {
 public:
     using std::basic_string<T, std::char_traits<T>, Alloc>::basic_string;
+    using size_type = typename std::basic_string<T, std::char_traits<T>, Alloc>::size_type;
 
     constexpr basic_string_secure(basic_string_secure&& other) noexcept
         : std::basic_string<T, std::char_traits<T>, Alloc>(std::move(other))
@@ -110,6 +111,35 @@ public:
     {
         std::basic_string<T, std::char_traits<T>, Alloc>::operator=(std::move(str));
         return *this;
+    }
+
+    [[nodiscard]] static basic_string_secure copy(const basic_string_secure& other, size_type pos,
+                                                  const Alloc& alloc = Alloc())
+    {
+        return basic_string_secure(other, pos, alloc);
+    }
+
+    [[nodiscard]] static basic_string_secure copy(const basic_string_secure& other,
+                                                  size_type pos, size_type count,
+                                                  const Alloc& alloc = Alloc())
+    {
+        return basic_string_secure(other, pos, count, alloc);
+    }
+
+    template<class InputIt>
+    [[nodiscard]] static basic_string_secure copy(InputIt first, InputIt last, const Alloc& alloc = Alloc())
+    {
+        return basic_string_secure(first, last, alloc);
+    }
+
+    [[nodiscard]] static basic_string_secure copy(const basic_string_secure& other)
+    {
+        return basic_string_secure(other);
+    }
+
+    [[nodiscard]] static basic_string_secure copy(const basic_string_secure& other, const Alloc& alloc)
+    {
+        return basic_string_secure(other, alloc);
     }
 
     /**
@@ -130,6 +160,31 @@ public:
             Alloc::sanitize(this->data(), n);
         }
     }
+
+protected:
+    constexpr basic_string_secure(const basic_string_secure& other, size_type pos,
+                                  const Alloc& alloc = Alloc())
+          : std::basic_string<T, std::char_traits<T>, Alloc>(other, pos, alloc)
+    {}
+
+    constexpr basic_string_secure(const basic_string_secure& other,
+                                  size_type pos, size_type count,
+                                  const Alloc& alloc = Alloc())
+          : std::basic_string<T, std::char_traits<T>, Alloc>(other, pos, count, alloc)
+    {}
+
+    template<class InputIt>
+    constexpr basic_string_secure(InputIt first, InputIt last, const Alloc& alloc = Alloc())
+        : std::basic_string<T, std::char_traits<T>, Alloc>(first, last, alloc)
+    {}
+
+    constexpr basic_string_secure(const basic_string_secure& other)
+        : std::basic_string<T, std::char_traits<T>, Alloc>(other)
+    {}
+
+    constexpr basic_string_secure(const basic_string_secure& other, const Alloc& alloc)
+        : std::basic_string<T, std::char_traits<T>, Alloc>(other, alloc)
+    {}
 };
 
 using string_secure = basic_string_secure<char>;
