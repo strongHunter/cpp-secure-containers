@@ -137,3 +137,56 @@ TEST_F(StringSecureConstructorTest, MoveAssignmentOperatorShouldMakeMovedStringE
     EXPECT_TRUE(str_.empty());
     EXPECT_EQ(ptr1, ptr2);
 }
+
+TEST_F(StringSecureConstructorTest, MethodCopyShouldCopiesDataCorrectly)
+{
+    char* ptr1 = str_.data();
+    char* ptr2;
+
+    string_secure copied = string_secure::copy(str_);
+    ptr2 = copied.data();
+
+    EXPECT_NE(ptr1, ptr2);
+    EXPECT_EQ(str_, copied);
+}
+
+TEST_F(StringSecureConstructorTest, MethodCopyWithAllocatorShouldCopiesDataCorrectly)
+{
+    SanitizingAllocator<char> allocator;
+    char* ptr1 = str_.data();
+    char* ptr2;
+
+    string_secure copied = string_secure::copy(str_, allocator);
+    ptr2 = copied.data();
+
+    EXPECT_NE(ptr1, ptr2);
+    EXPECT_EQ(str_, copied);
+}
+
+TEST_F(StringSecureConstructorTest, MethodCopyByIteratorsShouldCopiesDataCorrectly)
+{
+    char* ptr1 = str_.data();
+    char* ptr2;
+
+    string_secure copied = string_secure::copy(str_.cbegin(), str_.cend());
+    ptr2 = copied.data();
+
+    EXPECT_NE(ptr1, ptr2);
+    EXPECT_EQ(str_, copied);
+}
+
+TEST_F(StringSecureConstructorTest, MethodCopyFromPosShouldCopiesDataCorrectly)
+{
+    str_ = "0123456789";
+    string_secure copied = string_secure::copy(str_, 2);
+
+    EXPECT_EQ(copied, "23456789");
+}
+
+TEST_F(StringSecureConstructorTest, MethodCopySomeSymbolsFromPosShouldCopiesDataCorrectly)
+{
+    str_ = "0123456789";
+    string_secure copied = string_secure::copy(str_, 2, 5);
+
+    EXPECT_EQ(copied, "23456");
+}
