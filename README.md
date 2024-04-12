@@ -44,7 +44,7 @@ int main()
 }
 ```
 ---
-#### Использование стандартных методов vector_secure
+#### Доступность стандартных методов std::vector
 ```c++
 #include <iostream>
 #include "SecureContainers.h"
