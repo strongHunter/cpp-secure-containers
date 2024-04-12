@@ -44,6 +44,29 @@ int main()
 }
 ```
 ---
+#### Использование стандартных методов vector_secure
+```c++
+#include <iostream>
+#include "SecureContainers.h"
+
+int main()
+{
+    vector_secure<int> v = {8, 4, 5, 9};
+
+    v.push_back(6);
+    v.emplace_back(9);
+
+    v[2] = -1;
+
+    v.resize(10);
+    v.pop_back();
+
+    for (int n : v)
+        std::cout << n << ' ';
+    std::cout << std::endl;
+}
+```
+---
 #### Передача vector_secure в функцию
 ```c++
 #include <iostream>
