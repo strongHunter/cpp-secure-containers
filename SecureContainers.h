@@ -110,6 +110,17 @@ public:
     using std::basic_string<T, std::char_traits<T>, Alloc>::basic_string;
     using size_type = typename std::basic_string<T, std::char_traits<T>, Alloc>::size_type;
 
+    // std::basic_string constructors
+    template <typename BasicAllocator>
+    constexpr basic_string_secure(std::basic_string<T, std::char_traits<T>, BasicAllocator>& other) noexcept = delete;
+
+    template <typename BasicAllocator>
+    constexpr basic_string_secure(std::basic_string<T, std::char_traits<T>, BasicAllocator> other) noexcept
+            : std::basic_string<T, std::char_traits<T>, Alloc>(std::move(other))
+    {}
+
+
+    // move constructors
     constexpr basic_string_secure(basic_string_secure&& other) noexcept
         : std::basic_string<T, std::char_traits<T>, Alloc>()
     {

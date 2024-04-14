@@ -101,6 +101,18 @@ protected:
     string_secure str_;
 };
 
+TEST_F(StringSecureConstructorTest, ConstructorFromStdStringShouldMakeStringEmpty)
+{
+    std::string s15 = _15SymbolsString;
+    std::string s16 = _16SymbolsString;
+
+    str_ = std::move(s15);
+    EXPECT_TRUE(s15.empty());
+
+    str_ = std::move(s16);
+    EXPECT_TRUE(s16.empty());
+}
+
 TEST_F(StringSecureConstructorTest, MoveConstructorShouldMakeMovedStringEmpty)
 {
     char* ptr1 = str_.data();
