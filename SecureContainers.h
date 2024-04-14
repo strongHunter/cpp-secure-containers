@@ -92,6 +92,17 @@ protected:
 };
 
 
+template<typename T, IsSanitizingAllocator Alloc>
+class basic_string_secure;
+
+template<typename T, IsSanitizingAllocator Alloc>
+void swap(basic_string_secure<T, Alloc>& lhs, basic_string_secure<T, Alloc>& rhs) noexcept
+{
+    using std::swap;
+    swap(static_cast<std::basic_string<T, std::char_traits<T>, Alloc>&>(lhs),
+         static_cast<std::basic_string<T, std::char_traits<T>, Alloc>&>(rhs));
+}
+
 template <typename T, IsSanitizingAllocator Alloc = SanitizingAllocator<T>>
 class basic_string_secure : public std::basic_string<T, std::char_traits<T>, Alloc>
 {
@@ -99,12 +110,16 @@ public:
     using std::basic_string<T, std::char_traits<T>, Alloc>::basic_string;
 
     constexpr basic_string_secure(basic_string_secure&& other) noexcept
-        : std::basic_string<T, std::char_traits<T>, Alloc>(std::move(other))
-    {}
+        : std::basic_string<T, std::char_traits<T>, Alloc>()
+    {
+        swap(*this, other);
+    }
 
     constexpr basic_string_secure(basic_string_secure&& other, const Alloc& alloc)
-        : std::basic_string<T, std::char_traits<T>, Alloc>(std::move(other), alloc)
-    {}
+        : std::basic_string<T, std::char_traits<T>, Alloc>(alloc)
+    {
+        swap(*this, other);
+    }
 
     constexpr basic_string_secure& operator=(basic_string_secure&& str) noexcept
     {
