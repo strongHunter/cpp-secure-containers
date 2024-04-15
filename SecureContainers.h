@@ -110,14 +110,11 @@ public:
     using std::basic_string<T, std::char_traits<T>, Alloc>::basic_string;
     using size_type = typename std::basic_string<T, std::char_traits<T>, Alloc>::size_type;
 
-    // std::basic_string constructors
     template <typename BasicAllocator>
-    constexpr basic_string_secure(std::basic_string<T, std::char_traits<T>, BasicAllocator>& other) noexcept = delete;
-
-    template <typename BasicAllocator>
-    constexpr basic_string_secure(std::basic_string<T, std::char_traits<T>, BasicAllocator> other) noexcept
-            : std::basic_string<T, std::char_traits<T>, Alloc>(std::move(other))
-    {}
+    static basic_string_secure fromString(std::basic_string<T, std::char_traits<T>, BasicAllocator>&& other) noexcept
+    {
+        return basic_string_secure(std::move(other));
+    }
 
 
     // move constructors
@@ -188,6 +185,11 @@ public:
     }
 
 protected:
+    template <typename BasicAllocator>
+    constexpr basic_string_secure(std::basic_string<T, std::char_traits<T>, BasicAllocator> other) noexcept
+            : std::basic_string<T, std::char_traits<T>, Alloc>(std::move(other))
+    {}
+
     constexpr basic_string_secure(const basic_string_secure& other, size_type pos,
                                   const Alloc& alloc = Alloc())
           : std::basic_string<T, std::char_traits<T>, Alloc>(other, pos, alloc)
