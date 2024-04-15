@@ -177,6 +177,20 @@ TEST_F(StringSecureConstructorTest, MoveAssignmentOperatorShouldMakeMovedStringE
     EXPECT_EQ(ptr1, ptr2);
 }
 
+TEST_F(StringSecureConstructorTest, MoveAssignmentOperatorIntoExistingObjectShouldMakeMovedStringEmpty)
+{
+    string_secure str1;
+    string_secure str2(_16SymbolsString);
+
+    char* ptr1;
+    char* ptr2 = str2.data();
+
+    str1 = std::move(str2);
+    ptr1 = str1.data();
+
+    EXPECT_EQ(ptr1, ptr2);
+}
+
 TEST_F(StringSecureConstructorTest, MethodCopyShouldCopiesDataCorrectly)
 {
     char* ptr1 = str_.data();
