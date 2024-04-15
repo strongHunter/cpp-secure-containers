@@ -131,6 +131,15 @@ TEST_F(StringSecureConstructorTest, FromStringShouldCopyMemoryForLongString)
     EXPECT_NE(str_.data(), ptr16);
 }
 
+TEST_F(StringSecureConstructorTest, FromStringShouldMoveMemoryForEqualAllocator)
+{
+    std::basic_string<char, std::char_traits<char>, SanitizingAllocator<char>> s16 = _16SymbolsString;
+    char* ptr16 = s16.data();
+
+    string_secure str = string_secure::fromString(std::move(s16));
+    EXPECT_EQ(str.data(), ptr16);
+}
+
 TEST_F(StringSecureConstructorTest, MoveConstructorShouldMakeMovedStringEmpty)
 {
     char* ptr1 = str_.data();
