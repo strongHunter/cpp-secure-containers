@@ -113,6 +113,24 @@ TEST_F(StringSecureConstructorTest, FromStringShouldMakeStringEmpty)
     EXPECT_TRUE(s16.empty());
 }
 
+TEST_F(StringSecureConstructorTest, FromStringDontEraseMemoryForShortString)
+{
+    std::string s15 = _15SymbolsString;
+    char* ptr15 = s15.data();
+
+    str_ = string_secure::fromString(std::move(s15));
+    EXPECT_TRUE(0 == memcmp(ptr15 + 1, _15SymbolsString + 1, strlen(_15SymbolsString) - 1));
+}
+
+TEST_F(StringSecureConstructorTest, FromStringShouldCopyMemoryForLongString)
+{
+    std::string s16 = _16SymbolsString;
+    char* ptr16 = s16.data();
+
+    str_ = string_secure::fromString(std::move(s16));
+    EXPECT_NE(str_.data(), ptr16);
+}
+
 TEST_F(StringSecureConstructorTest, MoveConstructorShouldMakeMovedStringEmpty)
 {
     char* ptr1 = str_.data();
