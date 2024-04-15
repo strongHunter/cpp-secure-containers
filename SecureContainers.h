@@ -130,9 +130,9 @@ public:
         swap(*this, other);
     }
 
-    constexpr basic_string_secure& operator=(basic_string_secure&& str) noexcept
+    constexpr basic_string_secure& operator=(basic_string_secure other) noexcept
     {
-        std::basic_string<T, std::char_traits<T>, Alloc>::operator=(std::move(str));
+        swap(*this, other);
         return *this;
     }
 
