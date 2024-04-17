@@ -225,6 +225,15 @@ using u32string_secure = basic_string_secure<char32_t>;
 
 
 template<typename CharT, IsSanitizingAllocator Alloc>
+basic_string_secure<CharT, Alloc> operator+(const basic_string_secure<CharT, Alloc>& lhs,
+                                            const basic_string_secure<CharT, Alloc>& rhs)
+{
+    basic_string_secure<CharT, Alloc> result(basic_string_secure<CharT, Alloc>::copy(lhs));
+    result += rhs;
+    return result;
+}
+
+template<typename CharT, IsSanitizingAllocator Alloc>
 basic_string_secure<CharT, Alloc> operator+(const basic_string_secure<CharT, Alloc>& lhs, const CharT* rhs)
 {
     basic_string_secure<CharT, Alloc> result(basic_string_secure<CharT, Alloc>::copy(lhs));
