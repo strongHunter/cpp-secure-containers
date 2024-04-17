@@ -239,4 +239,12 @@ basic_string_secure<CharT, Alloc> operator+(basic_string_secure<CharT, Alloc>&& 
     return lhs;
 }
 
+template<typename CharT, IsSanitizingAllocator Alloc>
+basic_string_secure<CharT, Alloc> operator+(const CharT* lhs, const basic_string_secure<CharT, Alloc>& rhs)
+{
+    basic_string_secure<CharT, Alloc> result(lhs);
+    result += rhs;
+    return result;
+}
+
 #endif //SECURE_CONTAINERS_H
