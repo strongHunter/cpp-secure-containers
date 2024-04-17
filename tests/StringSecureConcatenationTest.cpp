@@ -75,3 +75,10 @@ TEST(StringSecureConcatenationTest, ConstChar_Plus_lvalue_StringSecure)
 
     EXPECT_EQ(s, "123456");
 }
+
+TEST(StringSecureConcatenationTest, ConstChar_Plus_rvalue_StringSecure)
+{
+    string_secure s = "123" + string_secure("456");
+
+    EXPECT_EQ(s, "123456");
+}
