@@ -20,3 +20,12 @@ TEST(StringSecureConcatenationTest, StringSecure_Plus_Char)
 
     EXPECT_EQ(s, "1234");
 }
+
+TEST(StringSecureConcatenationTest, StringSecure_Plus_lvalue_StringSecure)
+{
+    string_secure s1 = "123";
+    string_secure s2 = "456";
+    string_secure s = s1 + s2;
+
+    EXPECT_EQ(s, "123456");
+}
