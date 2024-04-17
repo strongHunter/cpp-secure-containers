@@ -21,9 +21,9 @@ inline void burn(void* ptr, size_t size) noexcept
 #elif (defined(__LINUX_API__) || defined(__MAC_OS_API__))
     memset(ptr, 0, size);
     asm volatile("" : : "r"(ptr) : "memory");
-    
+
 #else
-    volatile data_t* p = static_cast<volatile data_t*>(ptr);
+    volatile uint8_t* p = static_cast<volatile uint8_t*>(ptr);
     size_t len = size;
 
     while (len--) *p++ = 0;
