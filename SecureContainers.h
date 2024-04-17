@@ -234,6 +234,10 @@ basic_string_secure<CharT, Alloc> operator+(const basic_string_secure<CharT, All
 }
 
 template<typename CharT, IsSanitizingAllocator Alloc>
+basic_string_secure<CharT, Alloc> operator+(const basic_string_secure<CharT, Alloc>& lhs,
+                                            basic_string_secure<CharT, Alloc>&& rhs); // TODO
+
+template<typename CharT, IsSanitizingAllocator Alloc>
 basic_string_secure<CharT, Alloc> operator+(const basic_string_secure<CharT, Alloc>& lhs, const CharT* rhs)
 {
     basic_string_secure<CharT, Alloc> result(basic_string_secure<CharT, Alloc>::copy(lhs));
