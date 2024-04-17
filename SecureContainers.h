@@ -233,33 +233,10 @@ using u32string_secure = basic_string_secure<char32_t>;
 //    return result;
 //}
 
-template<typename CharT, IsSanitizingAllocator Alloc>
-basic_string_secure<CharT, Alloc> operator+(basic_string_secure<CharT, Alloc>&& lhs,
-                                            const basic_string_secure<CharT, Alloc>& rhs)
+template<typename CharT, IsSanitizingAllocator Alloc, typename RhsT>
+basic_string_secure<CharT, Alloc> operator+(basic_string_secure<CharT, Alloc>&& lhs, RhsT&& rhs)
 {
-    lhs += rhs;
-    return lhs;
-}
-
-template<typename CharT, IsSanitizingAllocator Alloc>
-basic_string_secure<CharT, Alloc> operator+(basic_string_secure<CharT, Alloc>&& lhs,
-                                            basic_string_secure<CharT, Alloc>&& rhs)
-{
-    lhs += rhs;
-    return lhs;
-}
-
-template<typename CharT, IsSanitizingAllocator Alloc>
-basic_string_secure<CharT, Alloc> operator+(basic_string_secure<CharT, Alloc>&& lhs, const CharT* rhs)
-{
-    lhs += rhs;
-    return lhs;
-}
-
-template<typename CharT, IsSanitizingAllocator Alloc>
-basic_string_secure<CharT, Alloc> operator+(basic_string_secure<CharT, Alloc>&& lhs, CharT rhs)
-{
-    lhs += rhs;
+    lhs += std::forward<RhsT>(rhs);
     return lhs;
 }
 
