@@ -223,4 +223,13 @@ using u8string_secure = basic_string_secure<char8_t>;
 using u16string_secure = basic_string_secure<char16_t>;
 using u32string_secure = basic_string_secure<char32_t>;
 
+
+template<typename CharT, IsSanitizingAllocator Alloc>
+basic_string_secure<CharT, Alloc> operator+(const basic_string_secure<CharT, Alloc>& lhs, const CharT* rhs)
+{
+    basic_string_secure<CharT, Alloc> result(basic_string_secure<CharT, Alloc>::copy(lhs));
+    result += rhs;
+    return result;
+}
+
 #endif //SECURE_CONTAINERS_H
