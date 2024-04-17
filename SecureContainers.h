@@ -243,6 +243,10 @@ basic_string_secure<CharT, Alloc> operator+(basic_string_secure<CharT, Alloc>&& 
 
 template<typename CharT, IsSanitizingAllocator Alloc>
 basic_string_secure<CharT, Alloc> operator+(basic_string_secure<CharT, Alloc>&& lhs,
-                                            basic_string_secure<CharT, Alloc>&& rhs); // TODO
+                                            basic_string_secure<CharT, Alloc>&& rhs)
+{
+    lhs += rhs;
+    return lhs;
+}
 
 #endif //SECURE_CONTAINERS_H
