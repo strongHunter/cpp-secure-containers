@@ -224,16 +224,21 @@ using u16string_secure = basic_string_secure<char16_t>;
 using u32string_secure = basic_string_secure<char32_t>;
 
 
-template<typename CharT, IsSanitizingAllocator Alloc, typename RhsT>
-basic_string_secure<CharT, Alloc> operator+(const basic_string_secure<CharT, Alloc>& lhs, RhsT&& rhs)
-{
-    basic_string_secure<CharT, Alloc> result(basic_string_secure<CharT, Alloc>::copy(lhs));
-    result += std::forward<RhsT>(rhs);
-    return result;
-}
+// TEMP COMMENTED
+//template<typename CharT, IsSanitizingAllocator Alloc, typename RhsT>
+//basic_string_secure<CharT, Alloc> operator+(const basic_string_secure<CharT, Alloc>& lhs, RhsT&& rhs)
+//{
+//    basic_string_secure<CharT, Alloc> result(basic_string_secure<CharT, Alloc>::copy(lhs));
+//    result += std::forward<RhsT>(rhs);
+//    return result;
+//}
 
 template<typename CharT, IsSanitizingAllocator Alloc>
 basic_string_secure<CharT, Alloc> operator+(basic_string_secure<CharT, Alloc>&& lhs,
-                                            const basic_string_secure<CharT, Alloc>& rhs); // TODO
+                                            const basic_string_secure<CharT, Alloc>& rhs)
+{
+    lhs += rhs;
+    return lhs;
+}
 
 #endif //SECURE_CONTAINERS_H
