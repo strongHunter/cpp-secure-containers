@@ -90,3 +90,10 @@ TEST(StringSecureConcatenationTest, Char_Plus_lvalue_StringSecure)
 
     EXPECT_EQ(s, "1234");
 }
+
+TEST(StringSecureConcatenationTest, Char_Plus_rvalue_StringSecure)
+{
+    string_secure s = '1' + string_secure("234");
+
+    EXPECT_EQ(s, "1234");
+}
