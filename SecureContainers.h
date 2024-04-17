@@ -184,6 +184,15 @@ public:
         }
     }
 
+
+    template<typename RhsT>
+    friend basic_string_secure operator+(T lhs, RhsT&& rhs)
+    {
+        basic_string_secure result(1, lhs);
+        result += std::forward<RhsT>(rhs);
+        return result;
+    }
+
 protected:
     template <typename BasicAllocator>
     constexpr basic_string_secure(std::basic_string<T, std::char_traits<T>, BasicAllocator> other) noexcept
@@ -251,22 +260,6 @@ template<typename CharT, IsSanitizingAllocator Alloc>
 basic_string_secure<CharT, Alloc> operator+(const CharT* lhs, basic_string_secure<CharT, Alloc>&& rhs)
 {
     basic_string_secure<CharT, Alloc> result(lhs);
-    result += rhs;
-    return result;
-}
-
-template<typename CharT, IsSanitizingAllocator Alloc>
-basic_string_secure<CharT, Alloc> operator+(CharT lhs, const basic_string_secure<CharT, Alloc>& rhs)
-{
-    basic_string_secure<CharT, Alloc> result(1, lhs);
-    result += rhs;
-    return result;
-}
-
-template<typename CharT, IsSanitizingAllocator Alloc>
-basic_string_secure<CharT, Alloc> operator+(CharT lhs, basic_string_secure<CharT, Alloc>&& rhs)
-{
-    basic_string_secure<CharT, Alloc> result(1, lhs);
     result += rhs;
     return result;
 }
