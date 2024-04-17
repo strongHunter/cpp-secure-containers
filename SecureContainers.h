@@ -185,6 +185,14 @@ public:
     }
 
 
+    template<typename LhsT, typename RhsT>
+    friend basic_string_secure operator+(LhsT&& lhs, RhsT&& rhs)
+    {
+        basic_string_secure result(std::forward<LhsT>(lhs));
+        result += std::forward<RhsT>(rhs);
+        return result;
+    }
+
     template<typename RhsT>
     friend basic_string_secure operator+(const T* lhs, RhsT&& rhs)
     {
@@ -239,21 +247,5 @@ using u8string_secure = basic_string_secure<char8_t>;
 #endif // __cpp_lib_char8_t
 using u16string_secure = basic_string_secure<char16_t>;
 using u32string_secure = basic_string_secure<char32_t>;
-
-
-template<typename CharT, IsSanitizingAllocator Alloc, typename RhsT>
-basic_string_secure<CharT, Alloc> operator+(const basic_string_secure<CharT, Alloc>& lhs, RhsT&& rhs)
-{
-    basic_string_secure<CharT, Alloc> result(basic_string_secure<CharT, Alloc>::copy(lhs));
-    result += std::forward<RhsT>(rhs);
-    return result;
-}
-
-template<typename CharT, IsSanitizingAllocator Alloc, typename RhsT>
-basic_string_secure<CharT, Alloc> operator+(basic_string_secure<CharT, Alloc>&& lhs, RhsT&& rhs)
-{
-    lhs += std::forward<RhsT>(rhs);
-    return lhs;
-}
 
 #endif //SECURE_CONTAINERS_H
