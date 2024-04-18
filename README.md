@@ -175,6 +175,7 @@ int main()
               << (s3.empty() ? "true" : "false") << std::endl; // false
 }
 ```
+---
 #### Копирование string_secure
 ```c++
 #include "SecureContainers.h"
@@ -191,6 +192,7 @@ int main()
     func_object(string_secure::copy(s));
 }
 ```
+---
 #### Пример из cppreference.com
 ```c++
 #include <iostream>
