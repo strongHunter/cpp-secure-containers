@@ -188,17 +188,15 @@ public:
     template<typename LhsT, typename RhsT>
     friend basic_string_secure operator+(LhsT&& lhs, RhsT&& rhs)
     {
-        basic_string_secure result(std::forward<LhsT>(lhs));
-        result += std::forward<RhsT>(rhs);
-        return result;
-    }
-
-    template<typename RhsT>
-    friend basic_string_secure operator+(T lhs, RhsT&& rhs)
-    {
-        basic_string_secure result(1, lhs);
-        result += std::forward<RhsT>(rhs);
-        return result;
+        if constexpr (std::is_same_v<LhsT, T>) {
+            basic_string_secure result(1, lhs);
+            result += std::forward<RhsT>(rhs);
+            return result;
+        } else {
+            basic_string_secure result(std::forward<LhsT>(lhs));
+            result += std::forward<RhsT>(rhs);
+            return result;
+        }
     }
 
 protected:
