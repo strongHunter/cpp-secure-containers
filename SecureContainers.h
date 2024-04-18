@@ -194,14 +194,6 @@ public:
     }
 
     template<typename RhsT>
-    friend basic_string_secure operator+(const T* lhs, RhsT&& rhs)
-    {
-        basic_string_secure result(lhs);
-        result += std::forward<RhsT>(rhs);
-        return result;
-    }
-
-    template<typename RhsT>
     friend basic_string_secure operator+(T lhs, RhsT&& rhs)
     {
         basic_string_secure result(1, lhs);
