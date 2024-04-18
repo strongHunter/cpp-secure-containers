@@ -184,22 +184,19 @@ public:
         }
     }
 
-
     template<typename LhsT, typename RhsT>
     friend basic_string_secure operator+(LhsT&& lhs, RhsT&& rhs)
     {
-        if constexpr (std::is_same_v<LhsT, T>) {
-            basic_string_secure result(1, lhs);
-            result += std::forward<RhsT>(rhs);
-            return result;
-        } else {
-            basic_string_secure result(std::forward<LhsT>(lhs));
-            result += std::forward<RhsT>(rhs);
-            return result;
-        }
+        basic_string_secure result(std::forward<LhsT>(lhs));
+        result += std::forward<RhsT>(rhs);
+        return result;
     }
 
 protected:
+    constexpr basic_string_secure(T ch)
+        : std::basic_string<T, std::char_traits<T>, Alloc>(1, ch)
+    {}
+
     template <typename BasicAllocator>
     constexpr basic_string_secure(std::basic_string<T, std::char_traits<T>, BasicAllocator> other) noexcept
             : std::basic_string<T, std::char_traits<T>, Alloc>(std::move(other))
