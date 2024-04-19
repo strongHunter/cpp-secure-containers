@@ -92,17 +92,6 @@ protected:
 };
 
 
-template<typename T, IsSanitizingAllocator Alloc>
-class basic_string_secure;
-
-template<typename T, IsSanitizingAllocator Alloc>
-void swap(basic_string_secure<T, Alloc>& lhs, basic_string_secure<T, Alloc>& rhs) noexcept
-{
-    using std::swap;
-    swap(static_cast<std::basic_string<T, std::char_traits<T>, Alloc>&>(lhs),
-         static_cast<std::basic_string<T, std::char_traits<T>, Alloc>&>(rhs));
-}
-
 template <typename T, IsSanitizingAllocator Alloc = SanitizingAllocator<T>>
 class basic_string_secure : public std::basic_string<T, std::char_traits<T>, Alloc>
 {
@@ -195,6 +184,12 @@ public:
         basic_string_secure result(std::forward<LhsT>(lhs));
         result += std::forward<RhsT>(rhs);
         return result;
+    }
+
+    friend void swap(basic_string_secure& lhs, basic_string_secure& rhs) noexcept
+    {
+        std::swap(static_cast<std::basic_string<T, std::char_traits<T>, Alloc>&>(lhs),
+                  static_cast<std::basic_string<T, std::char_traits<T>, Alloc>&>(rhs));
     }
 
 protected:
