@@ -184,7 +184,6 @@ public:
         }
     }
 
-    // TODO: test
     constexpr basic_string_secure substr(size_type pos = 0, size_type count = basic_string_secure::npos) const
     {
         return std::basic_string<T, std::char_traits<T>, Alloc>::substr(pos, count);
