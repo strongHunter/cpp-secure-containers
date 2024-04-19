@@ -40,28 +40,28 @@ template<typename T>
 concept IsSanitizingAllocator = std::is_base_of<SanitizingAllocator<typename T::value_type>, T>::value;
 
 
-template <typename T, IsSanitizingAllocator Alloc = SanitizingAllocator<T>>
-class vector_secure : public std::vector<T, Alloc>
+template <typename T, IsSanitizingAllocator Allocator = SanitizingAllocator<T>>
+class vector_secure : public std::vector<T, Allocator>
 {
 public:
-    using std::vector<T, Alloc>::vector;
+    using std::vector<T, Allocator>::vector;
 
     constexpr vector_secure(vector_secure&& other) noexcept
-        : std::vector<T, Alloc>(std::move(other))
+        : std::vector<T, Allocator>(std::move(other))
     {}
 
-    constexpr vector_secure(vector_secure&& other, const Alloc& alloc)
-        : std::vector<T, Alloc>(std::move(other), alloc)
+    constexpr vector_secure(vector_secure&& other, const Allocator& alloc)
+        : std::vector<T, Allocator>(std::move(other), alloc)
     {}
 
     constexpr vector_secure& operator=(vector_secure&& other) noexcept
     {
-        std::vector<T, Alloc>::operator=(std::move(other));
+        std::vector<T, Allocator>::operator=(std::move(other));
         return *this;
     }
 
     template<class InputIt>
-    [[nodiscard]] static vector_secure copy(InputIt first, InputIt last, const Alloc& alloc = Alloc())
+    [[nodiscard]] static vector_secure copy(InputIt first, InputIt last, const Allocator& alloc = Allocator())
     {
         return vector_secure(first, last, alloc);
     }
@@ -71,36 +71,36 @@ public:
         return vector_secure(other);
     }
 
-    [[nodiscard]] static vector_secure copy(const vector_secure& other, const Alloc& alloc)
+    [[nodiscard]] static vector_secure copy(const vector_secure& other, const Allocator& alloc)
     {
         return vector_secure(other, alloc);
     }
 
 protected:
     template<class InputIt>
-    constexpr vector_secure(InputIt first, InputIt last, const Alloc& alloc = Alloc())
-            : std::vector<T, Alloc>(first, last, alloc)
+    constexpr vector_secure(InputIt first, InputIt last, const Allocator& alloc = Allocator())
+            : std::vector<T, Allocator>(first, last, alloc)
     {}
 
     constexpr vector_secure(const vector_secure& other)
-            : std::vector<T, Alloc>(other)
+            : std::vector<T, Allocator>(other)
     {}
 
-    constexpr vector_secure(const vector_secure& other, const Alloc& alloc)
-            : std::vector<T, Alloc>(other, alloc)
+    constexpr vector_secure(const vector_secure& other, const Allocator& alloc)
+            : std::vector<T, Allocator>(other, alloc)
     {}
 };
 
 
-template <typename T, IsSanitizingAllocator Alloc = SanitizingAllocator<T>>
-class basic_string_secure : public std::basic_string<T, std::char_traits<T>, Alloc>
+template <typename CharT, IsSanitizingAllocator Allocator = SanitizingAllocator<CharT>>
+class basic_string_secure : public std::basic_string<CharT, std::char_traits<CharT>, Allocator>
 {
 public:
-    using std::basic_string<T, std::char_traits<T>, Alloc>::basic_string;
-    using size_type = typename std::basic_string<T, std::char_traits<T>, Alloc>::size_type;
+    using std::basic_string<CharT, std::char_traits<CharT>, Allocator>::basic_string;
+    using size_type = typename std::basic_string<CharT, std::char_traits<CharT>, Allocator>::size_type;
 
     template <typename BasicAllocator>
-    static basic_string_secure fromString(std::basic_string<T, std::char_traits<T>, BasicAllocator>&& other) noexcept
+    static basic_string_secure fromString(std::basic_string<CharT, std::char_traits<CharT>, BasicAllocator>&& other) noexcept
     {
         return basic_string_secure(std::move(other));
     }
@@ -108,13 +108,13 @@ public:
 
     // move constructors
     constexpr basic_string_secure(basic_string_secure&& other) noexcept
-        : std::basic_string<T, std::char_traits<T>, Alloc>()
+        : std::basic_string<CharT, std::char_traits<CharT>, Allocator>()
     {
         swap(*this, other);
     }
 
-    constexpr basic_string_secure(basic_string_secure&& other, const Alloc& alloc)
-        : std::basic_string<T, std::char_traits<T>, Alloc>(alloc)
+    constexpr basic_string_secure(basic_string_secure&& other, const Allocator& alloc)
+        : std::basic_string<CharT, std::char_traits<CharT>, Allocator>(alloc)
     {
         swap(*this, other);
     }
@@ -126,20 +126,20 @@ public:
     }
 
     [[nodiscard]] static basic_string_secure copy(const basic_string_secure& other, size_type pos,
-                                                  const Alloc& alloc = Alloc())
+                                                  const Allocator& alloc = Allocator())
     {
         return basic_string_secure(other, pos, alloc);
     }
 
     [[nodiscard]] static basic_string_secure copy(const basic_string_secure& other,
                                                   size_type pos, size_type count,
-                                                  const Alloc& alloc = Alloc())
+                                                  const Allocator& alloc = Allocator())
     {
         return basic_string_secure(other, pos, count, alloc);
     }
 
     template<class InputIt>
-    [[nodiscard]] static basic_string_secure copy(InputIt first, InputIt last, const Alloc& alloc = Alloc())
+    [[nodiscard]] static basic_string_secure copy(InputIt first, InputIt last, const Allocator& alloc = Allocator())
     {
         return basic_string_secure(first, last, alloc);
     }
@@ -149,7 +149,7 @@ public:
         return basic_string_secure(other);
     }
 
-    [[nodiscard]] static basic_string_secure copy(const basic_string_secure& other, const Alloc& alloc)
+    [[nodiscard]] static basic_string_secure copy(const basic_string_secure& other, const Allocator& alloc)
     {
         return basic_string_secure(other, alloc);
     }
@@ -169,13 +169,13 @@ public:
     {
         auto n = this->size();
         if (n < 16) {
-            Alloc::sanitize(this->data(), n);
+            Allocator::sanitize(this->data(), n);
         }
     }
 
     constexpr basic_string_secure substr(size_type pos = 0, size_type count = basic_string_secure::npos) const
     {
-        return std::basic_string<T, std::char_traits<T>, Alloc>::substr(pos, count);
+        return std::basic_string<CharT, std::char_traits<CharT>, Allocator>::substr(pos, count);
     }
 
     template<typename LhsT, typename RhsT>
@@ -188,42 +188,42 @@ public:
 
     friend void swap(basic_string_secure& lhs, basic_string_secure& rhs) noexcept
     {
-        std::swap(static_cast<std::basic_string<T, std::char_traits<T>, Alloc>&>(lhs),
-                  static_cast<std::basic_string<T, std::char_traits<T>, Alloc>&>(rhs));
+        std::swap(static_cast<std::basic_string<CharT, std::char_traits<CharT>, Allocator>&>(lhs),
+                  static_cast<std::basic_string<CharT, std::char_traits<CharT>, Allocator>&>(rhs));
     }
 
 protected:
-    constexpr basic_string_secure(T ch)
-        : std::basic_string<T, std::char_traits<T>, Alloc>(1, ch)
+    constexpr basic_string_secure(CharT ch)
+        : std::basic_string<CharT, std::char_traits<CharT>, Allocator>(1, ch)
     {}
 
     template <typename BasicAllocator>
-    constexpr basic_string_secure(std::basic_string<T, std::char_traits<T>, BasicAllocator> other) noexcept
-            : std::basic_string<T, std::char_traits<T>, Alloc>(std::move(other))
+    constexpr basic_string_secure(std::basic_string<CharT, std::char_traits<CharT>, BasicAllocator> other) noexcept
+            : std::basic_string<CharT, std::char_traits<CharT>, Allocator>(std::move(other))
     {}
 
     constexpr basic_string_secure(const basic_string_secure& other, size_type pos,
-                                  const Alloc& alloc = Alloc())
-          : std::basic_string<T, std::char_traits<T>, Alloc>(other, pos, alloc)
+                                  const Allocator& alloc = Allocator())
+          : std::basic_string<CharT, std::char_traits<CharT>, Allocator>(other, pos, alloc)
     {}
 
     constexpr basic_string_secure(const basic_string_secure& other,
                                   size_type pos, size_type count,
-                                  const Alloc& alloc = Alloc())
-          : std::basic_string<T, std::char_traits<T>, Alloc>(other, pos, count, alloc)
+                                  const Allocator& alloc = Allocator())
+          : std::basic_string<CharT, std::char_traits<CharT>, Allocator>(other, pos, count, alloc)
     {}
 
     template<class InputIt>
-    constexpr basic_string_secure(InputIt first, InputIt last, const Alloc& alloc = Alloc())
-        : std::basic_string<T, std::char_traits<T>, Alloc>(first, last, alloc)
+    constexpr basic_string_secure(InputIt first, InputIt last, const Allocator& alloc = Allocator())
+        : std::basic_string<CharT, std::char_traits<CharT>, Allocator>(first, last, alloc)
     {}
 
     constexpr basic_string_secure(const basic_string_secure& other)
-        : std::basic_string<T, std::char_traits<T>, Alloc>(other)
+        : std::basic_string<CharT, std::char_traits<CharT>, Allocator>(other)
     {}
 
-    constexpr basic_string_secure(const basic_string_secure& other, const Alloc& alloc)
-        : std::basic_string<T, std::char_traits<T>, Alloc>(other, alloc)
+    constexpr basic_string_secure(const basic_string_secure& other, const Allocator& alloc)
+        : std::basic_string<CharT, std::char_traits<CharT>, Allocator>(other, alloc)
     {}
 };
 
