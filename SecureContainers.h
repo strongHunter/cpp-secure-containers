@@ -9,14 +9,13 @@
 
 #include "platform.h"
 
-template <typename T>
-struct SanitizingAllocator : public std::allocator<T> {
-public:
-    using std::allocator<T>::allocator;
+template <typename T, template <typename> typename BasicAllocator>
+struct sanitizing_allocator_base : public BasicAllocator<T> {
+    using BasicAllocator<T>::BasicAllocator;
 
     template<typename U>
     struct rebind {
-        typedef SanitizingAllocator<U> other;
+        typedef sanitizing_allocator_base<U, BasicAllocator> other;
     };
 
     static void sanitize(T* p, size_t n)
@@ -32,9 +31,12 @@ public:
     void deallocate(T* p, size_t n)
     {
         cleanse(p, n);
-        std::allocator<T>::deallocate(p, n);
+        BasicAllocator<T>::deallocate(p, n);
     }
 };
+
+template <typename T>
+using SanitizingAllocator = sanitizing_allocator_base<T, std::allocator>;
 
 template<typename T>
 concept IsSanitizingAllocator = std::is_base_of<SanitizingAllocator<typename T::value_type>, T>::value;
