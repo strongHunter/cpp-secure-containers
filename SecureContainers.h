@@ -36,13 +36,13 @@ struct sanitizing_allocator_base : public BasicAllocator<T> {
 };
 
 template <typename T>
-using SanitizingAllocator = sanitizing_allocator_base<T, std::allocator>;
+using sanitizing_allocator = sanitizing_allocator_base<T, std::allocator>;
 
 template<typename T>
-concept IsSanitizingAllocator = std::is_base_of<SanitizingAllocator<typename T::value_type>, T>::value;
+concept IsSanitizingAllocator = std::is_base_of<sanitizing_allocator<typename T::value_type>, T>::value;
 
 
-template <typename T, IsSanitizingAllocator Allocator = SanitizingAllocator<T>>
+template <typename T, IsSanitizingAllocator Allocator = sanitizing_allocator<T>>
 class vector_secure : public std::vector<T, Allocator>
 {
 public:
@@ -94,7 +94,7 @@ protected:
 };
 
 
-template <typename CharT, IsSanitizingAllocator Allocator = SanitizingAllocator<CharT>>
+template <typename CharT, IsSanitizingAllocator Allocator = sanitizing_allocator<CharT>>
 class basic_string_secure : public std::basic_string<CharT, std::char_traits<CharT>, Allocator>
 {
 public:

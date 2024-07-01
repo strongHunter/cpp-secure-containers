@@ -6,9 +6,9 @@
 using Type = uint32_t;
 
 template <typename T>
-class SanitizingAllocatorChild : public SanitizingAllocator<T> {
+class SanitizingAllocatorChild : public sanitizing_allocator<T> {
 public:
-    using SanitizingAllocator<T>::SanitizingAllocator;
+    using sanitizing_allocator<T>::sanitizing_allocator;
 
     template<typename U>
     struct rebind {
@@ -20,19 +20,19 @@ public:
 TEST(VectorSecureTests, DefaultAllocatorShouldBe_SanitizingAllocator)
 {
     vector_secure<Type> vec;
-    EXPECT_TRUE((std::is_same<typename decltype(vec)::allocator_type, SanitizingAllocator<Type>>::value));
+    EXPECT_TRUE((std::is_same<typename decltype(vec)::allocator_type, sanitizing_allocator<Type>>::value));
 }
 
 TEST(VectorSecureTests, CanDefineVectorWithDerivedSanitizingAllocator)
 {
     vector_secure<Type, SanitizingAllocatorChild<Type>> vec;
-    EXPECT_TRUE((std::is_base_of<SanitizingAllocator<Type>, decltype(vec)::allocator_type>::value));
+    EXPECT_TRUE((std::is_base_of<sanitizing_allocator<Type>, decltype(vec)::allocator_type>::value));
 }
 
 TEST(VectorSecureTests, ChildAllocator_NotEqual_SanitizingAllocator)
 {
     vector_secure<Type, SanitizingAllocatorChild<Type>> vec;
-    EXPECT_FALSE((std::is_same<typename decltype(vec)::allocator_type, SanitizingAllocator<Type>>::value));
+    EXPECT_FALSE((std::is_same<typename decltype(vec)::allocator_type, sanitizing_allocator<Type>>::value));
 }
 
 
@@ -80,7 +80,7 @@ TEST_F(VectorSecureConstructorsTest, MoveConstructorShouldMakeMovedVectorEmpty)
 
 TEST_F(VectorSecureConstructorsTest, MoveConstructorWithAllocatorShouldMakeMovedVectorEmpty)
 {
-    SanitizingAllocator<uint8_t> allocator;
+    sanitizing_allocator<uint8_t> allocator;
     uint8_t* ptr1 = vec_.data();
     uint8_t* ptr2;
 
@@ -117,7 +117,7 @@ TEST_F(VectorSecureConstructorsTest, MethodCopyShouldCopiesDataCorrectly)
 
 TEST_F(VectorSecureConstructorsTest, MethodCopyWithAllocatorShouldCopiesDataCorrectly)
 {
-    SanitizingAllocator<uint8_t> allocator;
+    sanitizing_allocator<uint8_t> allocator;
     uint8_t* ptr1 = vec_.data();
     uint8_t* ptr2;
 

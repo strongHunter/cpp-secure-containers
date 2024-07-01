@@ -16,7 +16,7 @@ int main()
     hexPrint(str3.c_str(), str3.size() * sizeof(char));
 
     std::cout << std::endl << "Moving..." << std::endl;
-    SanitizingAllocator<char> allocator;
+    sanitizing_allocator<char> allocator;
     string_secure moved1(std::move(str1));
     string_secure moved2(std::move(str2), allocator);
     string_secure moved3 = std::move(str3);

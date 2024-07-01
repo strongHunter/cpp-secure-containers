@@ -25,7 +25,7 @@ int main()
     hexPrint(vec3.data(), vec3.size() * sizeof(uint8_t));
 
     std::cout << std::endl << "Moving..." << std::endl;
-    SanitizingAllocator<uint8_t> allocator;
+    sanitizing_allocator<uint8_t> allocator;
     vector_secure<uint8_t> moved1(std::move(vec1));
     vector_secure<uint8_t> moved2(std::move(vec2), allocator);
     vector_secure<uint8_t> moved3 = std::move(vec3);

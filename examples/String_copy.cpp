@@ -22,7 +22,7 @@ int main()
     hexPrint(str5.c_str(), str5.size() * sizeof(char));
 
     std::cout << std::endl << "Moving..." << std::endl;
-    SanitizingAllocator<char> allocator;
+    sanitizing_allocator<char> allocator;
     string_secure copy1(string_secure::copy(str1));
     string_secure copy2(string_secure::copy(str2, allocator));
     string_secure copy3(string_secure::copy(str3.cbegin(), str3.cend()));

@@ -18,9 +18,9 @@ SanitizeMock<char>* mock = nullptr;
 
 
 template <typename T>
-class SanitizingAllocatorChild : public SanitizingAllocator<T> {
+class SanitizingAllocatorChild : public sanitizing_allocator<T> {
 public:
-    using SanitizingAllocator<T>::SanitizingAllocator;
+    using sanitizing_allocator<T>::sanitizing_allocator;
 
     template<typename U>
     struct rebind {
@@ -38,19 +38,19 @@ public:
 TEST(StringSecureTest, DefaultAllocatorShouldBe_SanitizingAllocator)
 {
     string_secure str;
-    EXPECT_TRUE((std::is_same<typename decltype(str)::allocator_type, SanitizingAllocator<char>>::value));
+    EXPECT_TRUE((std::is_same<typename decltype(str)::allocator_type, sanitizing_allocator<char>>::value));
 }
 
 TEST(StringSecureTest, CanDefineStringWithDerivedSanitizingAllocator)
 {
     basic_string_secure<char, SanitizingAllocatorChild<char>> str;
-    EXPECT_TRUE((std::is_base_of<SanitizingAllocator<char>, decltype(str)::allocator_type>::value));
+    EXPECT_TRUE((std::is_base_of<sanitizing_allocator<char>, decltype(str)::allocator_type>::value));
 }
 
 TEST(StringSecureTest, ChildAllocator_NotEqual_SanitizingAllocator)
 {
     basic_string_secure<char, SanitizingAllocatorChild<char>> str;
-    EXPECT_FALSE((std::is_same<typename decltype(str)::allocator_type, SanitizingAllocator<char>>::value));
+    EXPECT_FALSE((std::is_same<typename decltype(str)::allocator_type, sanitizing_allocator<char>>::value));
 }
 
 
@@ -133,7 +133,7 @@ TEST_F(StringSecureConstructorTest, FromStringShouldCopyMemoryForLongString)
 
 TEST(StringSecureTest, FromStringShouldMoveMemoryForEqualAllocator)
 {
-    std::basic_string<char, std::char_traits<char>, SanitizingAllocator<char>> s16 = _16SymbolsString;
+    std::basic_string<char, std::char_traits<char>, sanitizing_allocator<char>> s16 = _16SymbolsString;
     char* ptr16 = s16.data();
 
     string_secure str = string_secure::fromString(std::move(s16));
@@ -154,7 +154,7 @@ TEST_F(StringSecureConstructorTest, MoveConstructorShouldMakeMovedStringEmpty)
 
 TEST_F(StringSecureConstructorTest, MoveConstructorWithAllocatorShouldMakeMovedStringEmpty)
 {
-    SanitizingAllocator<char> allocator;
+    sanitizing_allocator<char> allocator;
     char* ptr1 = str_.data();
     char* ptr2;
 
@@ -205,7 +205,7 @@ TEST_F(StringSecureConstructorTest, MethodCopyShouldCopiesDataCorrectly)
 
 TEST_F(StringSecureConstructorTest, MethodCopyWithAllocatorShouldCopiesDataCorrectly)
 {
-    SanitizingAllocator<char> allocator;
+    sanitizing_allocator<char> allocator;
     char* ptr1 = str_.data();
     char* ptr2;
 

@@ -20,7 +20,7 @@ MATCHER_P(EachIsZero, count, "All bytes are 0")
 
 
 template <typename T>
-class MockSanitizingAllocator : public SanitizingAllocator<T> {
+class MockSanitizingAllocator : public sanitizing_allocator<T> {
 public:
     MOCK_METHOD(void, cleanse,(T* p, size_t n), (override));
 };
@@ -31,14 +31,14 @@ protected:
     void SetUp() override
     {
         allocatorMock_ = std::make_unique<MockSanitizingAllocator<T>>();
-        allocatorOrig_ = std::make_unique<SanitizingAllocator<T>>();
+        allocatorOrig_ = std::make_unique<sanitizing_allocator<T>>();
     }
 
     void TearDown() override
     {}
 
     std::unique_ptr<MockSanitizingAllocator<T>> allocatorMock_;
-    std::unique_ptr<SanitizingAllocator<T>> allocatorOrig_;
+    std::unique_ptr<sanitizing_allocator<T>> allocatorOrig_;
 };
 
 TYPED_TEST_SUITE_P(SanitizingAllocatorTest);
