@@ -21,7 +21,7 @@
 #### Основное использование vector_secure
 ```c++
 #include <iostream>
-#include "SecureContainers.h"
+#include "vector_secure.h"
 
 int main()
 {
@@ -48,7 +48,7 @@ int main()
 #### Доступность стандартных методов std::vector
 ```c++
 #include <iostream>
-#include "SecureContainers.h"
+#include "vector_secure.h"
 
 int main()
 {
@@ -71,7 +71,7 @@ int main()
 #### Передача vector_secure в функцию
 ```c++
 #include <iostream>
-#include "SecureContainers.h"
+#include "vector_secure.h"
 
 void func_object(vector_secure<int> v) {}
 void func_lvalue(vector_secure<int>& v) {}
@@ -100,7 +100,7 @@ int main()
 ---
 #### Копирование vector_secure
 ```c++
-#include "SecureContainers.h"
+#include "vector_secure.h"
 
 void func_object(vector_secure<int> v) {}
 
@@ -120,7 +120,7 @@ int main()
 ```c++
 #include <iostream>
 #include <iomanip>
-#include "SecureContainers.h"
+#include "basic_string_secure.h"
 
 void print(const char* ptr, size_t size)
 {
@@ -150,7 +150,7 @@ int main()
 #### Передача string_secure в функцию
 ```c++
 #include <iostream>
-#include "SecureContainers.h"
+#include "basic_string_secure.h"
 
 void func_object(string_secure s) {}
 void func_lvalue(string_secure& s) {}
@@ -179,7 +179,7 @@ int main()
 ---
 #### Копирование string_secure
 ```c++
-#include "SecureContainers.h"
+#include "basic_string_secure.h"
 
 void func_object(string_secure s) {}
 
@@ -197,7 +197,7 @@ int main()
 #### Пример из cppreference.com
 ```c++
 #include <iostream>
-#include "SecureContainers.h"
+#include "basic_string_secure.h"
 
 // Example from https://en.cppreference.com/w/cpp/string/basic_string
 int main()

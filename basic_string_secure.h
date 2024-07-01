@@ -1,68 +1,13 @@
-#ifndef SECURE_CONTAINERS_H
-#define SECURE_CONTAINERS_H
+#ifndef BASIC_STRING_SECURE_H
+#define BASIC_STRING_SECURE_H
 
 #include <cstring>
 #include <string>
-#include <vector>
 
 #include "sanitizing_allocator.h"
 
-
-template <typename T, IsSanitizingAllocator Allocator = sanitizing_allocator<T>>
-class vector_secure : public std::vector<T, Allocator>
-{
-public:
-    using std::vector<T, Allocator>::vector;
-
-    constexpr vector_secure(vector_secure&& other) noexcept
-        : std::vector<T, Allocator>(std::move(other))
-    {}
-
-    constexpr vector_secure(vector_secure&& other, const Allocator& alloc)
-        : std::vector<T, Allocator>(std::move(other), alloc)
-    {}
-
-    constexpr vector_secure& operator=(vector_secure&& other) noexcept
-    {
-        std::vector<T, Allocator>::operator=(std::move(other));
-        return *this;
-    }
-
-    template<class InputIt>
-    [[nodiscard]] static vector_secure copy(InputIt first, InputIt last, const Allocator& alloc = Allocator())
-    {
-        return vector_secure(first, last, alloc);
-    }
-
-    [[nodiscard]] static vector_secure copy(const vector_secure& other)
-    {
-        return vector_secure(other);
-    }
-
-    [[nodiscard]] static vector_secure copy(const vector_secure& other, const Allocator& alloc)
-    {
-        return vector_secure(other, alloc);
-    }
-
-protected:
-    template<class InputIt>
-    constexpr vector_secure(InputIt first, InputIt last, const Allocator& alloc = Allocator())
-            : std::vector<T, Allocator>(first, last, alloc)
-    {}
-
-    constexpr vector_secure(const vector_secure& other)
-            : std::vector<T, Allocator>(other)
-    {}
-
-    constexpr vector_secure(const vector_secure& other, const Allocator& alloc)
-            : std::vector<T, Allocator>(other, alloc)
-    {}
-};
-
-
-template <typename CharT, IsSanitizingAllocator Allocator = sanitizing_allocator<CharT>>
-class basic_string_secure : public std::basic_string<CharT, std::char_traits<CharT>, Allocator>
-{
+template <typename CharT, SanitizingAllocatorDerived Allocator = sanitizing_allocator<CharT>>
+class basic_string_secure : public std::basic_string<CharT, std::char_traits<CharT>, Allocator> {
 public:
     using std::basic_string<CharT, std::char_traits<CharT>, Allocator>::basic_string;
     using size_type = typename std::basic_string<CharT, std::char_traits<CharT>, Allocator>::size_type;
@@ -203,4 +148,4 @@ using u8string_secure = basic_string_secure<char8_t>;
 using u16string_secure = basic_string_secure<char16_t>;
 using u32string_secure = basic_string_secure<char32_t>;
 
-#endif //SECURE_CONTAINERS_H
+#endif // BASIC_STRING_SECURE_H

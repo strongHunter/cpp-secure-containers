@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "SecureContainers.h"
+#include "sanitizing_allocator.h"
 
 using testing::_;
 

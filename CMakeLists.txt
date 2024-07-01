@@ -7,7 +7,9 @@ option(ENABLE_TESTING "Build the tests" ON)
 set(CMAKE_CXX_STANDARD 20)
 
 add_library(cpp_secure_containers INTERFACE)
-target_sources(cpp_secure_containers INTERFACE SecureContainers.h)
+target_sources(cpp_secure_containers INTERFACE
+        sanitizing_allocator.h
+        vector_secure.h basic_string_secure.h)
 
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
