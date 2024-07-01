@@ -39,7 +39,7 @@ template <typename T>
 using sanitizing_allocator = sanitizing_allocator_base<T, std::allocator>;
 
 template<typename T>
-concept IsSanitizingAllocator = std::is_base_of<sanitizing_allocator<typename T::value_type>, T>::value;
+concept SanitizingAllocatorDerived = std::is_base_of<sanitizing_allocator<typename T::value_type>, T>::value;
 
 
 template <typename T, IsSanitizingAllocator Allocator = sanitizing_allocator<T>>
