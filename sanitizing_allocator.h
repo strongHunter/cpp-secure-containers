@@ -36,7 +36,22 @@ struct sanitizing_allocator_base : public BasicAllocator<T> {
 template <typename T>
 using sanitizing_allocator = sanitizing_allocator_base<T, std::allocator>;
 
-template<typename T>
-concept SanitizingAllocatorDerived = std::is_base_of<sanitizing_allocator<typename T::value_type>, T>::value;
+
+template <typename Derived, template <typename, template <typename> typename> typename Base>
+struct is_derived_from {
+    template <typename T, template <typename> typename Alloc>
+    static std::true_type __test(Base<T, Alloc>*);
+
+    static std::false_type __test(...);
+
+    using type = decltype(__test(std::declval<Derived*>()));
+    static constexpr bool value = type::value;
+};
+
+template <typename Allocator>
+concept SanitizingAllocatorDerived = is_derived_from<
+        Allocator,
+        sanitizing_allocator_base
+>::value;
 
 #endif // SANITIZING_ALLOCATOR_H
