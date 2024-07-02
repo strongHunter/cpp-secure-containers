@@ -228,3 +228,39 @@ int main()
     std::cout << str1 << '\n';
 }
 ```
+---
+### Custom Allocator
+```c++
+#include "vector_secure.h"
+
+template <typename T>
+struct MyAllocator {
+    using value_type = T;
+
+    MyAllocator() = default;
+    
+    T* allocate(size_t n)
+    {
+        std::cout << "MyAllocator allocating " << n << " elements." << std::endl;
+        return static_cast<T*>(::operator new(n * sizeof(T)));
+    }
+
+    void deallocate(T* p, size_t n)
+    {
+        std::cout << "MyAllocator deallocating " << n << " elements." << std::endl;
+        ::operator delete(p);
+    }
+};
+
+template <typename T>
+using my_sanitizing_allocator = sanitizing_allocator_base<T, MyAllocator>;
+
+template <typename T>
+using my_vector_secure = vector_secure<T, my_sanitizing_allocator<T>>;
+
+int main()
+{
+    my_vector_secure<uint8_t> vector;
+    // your vector using...
+}
+```
