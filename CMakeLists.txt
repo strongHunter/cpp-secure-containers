@@ -7,11 +7,16 @@ option(ENABLE_TESTING "Build the tests" OFF)
 set(CMAKE_CXX_STANDARD 20)
 
 add_library(cpp_secure_containers INTERFACE)
-target_include_directories(cpp_secure_containers INTERFACE include)
+target_include_directories(cpp_secure_containers INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_sources(cpp_secure_containers INTERFACE
-        include/sanitizing_allocator.h
-        include/vector_secure.h
-        include/basic_string_secure.h)
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/sanitizing_allocator.h>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/vector_secure.h>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/basic_string_secure.h>)
+
+add_library(cpp_secure_containers_platform STATIC platform.cpp)
+target_include_directories(cpp_secure_containers_platform PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(cpp_secure_containers INTERFACE cpp_secure_containers_platform)
 
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
