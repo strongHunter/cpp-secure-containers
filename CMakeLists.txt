@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.21)
 project(cpp-secure-containers)
 
-option(BUILD_EXAMPLES "Build the examples" ON)
-option(ENABLE_TESTING "Build the tests" ON)
+option(BUILD_EXAMPLES "Build the examples" OFF)
+option(ENABLE_TESTING "Build the tests" OFF)
 
 set(CMAKE_CXX_STANDARD 20)
 
