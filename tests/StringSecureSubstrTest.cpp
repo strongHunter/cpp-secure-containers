@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "basic_string_secure.h"
+#include <include/basic_string_secure.h>
 
 using testing::_;
 
