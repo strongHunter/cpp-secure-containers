@@ -10,14 +10,14 @@ add_library(cpp_sc INTERFACE)
 add_library(cpp_sc::cpp_sc ALIAS cpp_sc)
 
 target_include_directories(cpp_sc INTERFACE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include)
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/cpp_sc)
 target_sources(cpp_sc INTERFACE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/sanitizing_allocator.h>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/vector_secure.h>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/basic_string_secure.h>)
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/cpp_sc/sanitizing_allocator.h>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/cpp_sc/vector_secure.h>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/cpp_sc/basic_string_secure.h>)
 
-add_library(cpp_sc_platform STATIC platform.cpp)
-target_include_directories(cpp_sc_platform PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(cpp_sc_platform STATIC src/platform.cpp)
+target_include_directories(cpp_sc_platform PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(cpp_sc INTERFACE cpp_sc_platform)
 
 if(BUILD_EXAMPLES)

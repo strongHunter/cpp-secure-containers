@@ -1,5 +1,5 @@
 #include "commonUtils.h"
-#include <include/basic_string_secure.h>
+#include <cpp_sc/basic_string_secure.h>
 
 int main()
 {

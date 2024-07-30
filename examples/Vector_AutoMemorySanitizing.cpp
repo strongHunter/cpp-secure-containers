@@ -1,5 +1,5 @@
 #include "commonUtils.h"
-#include <include/vector_secure.h>
+#include <cpp_sc/vector_secure.h>
 
 int main()
 {

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include <include/basic_string_secure.h>
+#include <cpp_sc/basic_string_secure.h>
 
 static const char* _15SymbolsString = "0123456789abcde";
 static const char* _16SymbolsString = "0123456789abcdef";

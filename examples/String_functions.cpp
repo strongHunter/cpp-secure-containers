@@ -1,5 +1,5 @@
 #include <iostream>
-#include <include/basic_string_secure.h>
+#include <cpp_sc/basic_string_secure.h>
 
 // Example from https://en.cppreference.com/w/cpp/string/basic_string
 int main()

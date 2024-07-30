@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include <include/vector_secure.h>
+#include <cpp_sc/vector_secure.h>
 
 using Type = uint32_t;
 

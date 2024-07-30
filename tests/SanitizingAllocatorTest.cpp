@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include <include/sanitizing_allocator.h>
+#include <cpp_sc/sanitizing_allocator.h>
 
 using testing::_;
 
