@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.21)
 project(cpp-secure-containers)
 
-option(BUILD_EXAMPLES "Build the examples" OFF)
-option(ENABLE_TESTING "Build the tests" OFF)
+option(cpp_sc_BUILD_EXAMPLES "Build the examples" OFF)
+option(cpp_sc_ENABLE_TESTING "Build the tests" OFF)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -20,11 +20,11 @@ add_library(cpp_sc_platform STATIC src/platform.cpp)
 target_include_directories(cpp_sc_platform PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(cpp_sc INTERFACE cpp_sc_platform)
 
-if(BUILD_EXAMPLES)
+if(cpp_sc_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
-if(ENABLE_TESTING)
+if(cpp_sc_ENABLE_TESTING)
     set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
     option(DOWNLOAD_DEPENDENCIES "Allow the downloading and in-tree building of unmet dependencies" ON)
 
