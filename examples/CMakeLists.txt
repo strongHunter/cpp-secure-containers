@@ -1,5 +1,5 @@
 include_directories(${CMAKE_SOURCE_DIR})
-link_libraries(cpp_secure_containers)
+link_libraries(cpp_sc::cpp_sc)
 
 add_executable(Vector_AutoMemorySanitizing Vector_AutoMemorySanitizing.cpp)
 add_executable(String_AutoMemorySanitizing String_AutoMemorySanitizing.cpp)

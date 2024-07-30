@@ -9,8 +9,8 @@ macro(compile_output_test name)
 endmacro(compile_output_test)
 
 
-compile_output_test(SanitizingAllocatorTest cpp_secure_containers)
-compile_output_test(VectorSecureTest cpp_secure_containers)
-compile_output_test(StringSecureTest cpp_secure_containers)
-compile_output_test(StringSecureConcatenationTest cpp_secure_containers)
-compile_output_test(StringSecureSubstrTest cpp_secure_containers)
+compile_output_test(SanitizingAllocatorTest cpp_sc::cpp_sc)
+compile_output_test(VectorSecureTest cpp_sc::cpp_sc)
+compile_output_test(StringSecureTest cpp_sc::cpp_sc)
+compile_output_test(StringSecureConcatenationTest cpp_sc::cpp_sc)
+compile_output_test(StringSecureSubstrTest cpp_sc::cpp_sc)
