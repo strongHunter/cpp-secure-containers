@@ -6,28 +6,24 @@
 
 #include "platform.h"
 
-template <typename T, template <typename> typename BasicAllocator>
+template <typename T, template <typename> typename BasicAllocator,
+        void(*CleanseFunc)(void*, size_t) = &burn>
 struct sanitizing_allocator_base : public BasicAllocator<T> {
     using BasicAllocator<T>::BasicAllocator;
 
     template<typename U>
     struct rebind {
-        typedef sanitizing_allocator_base<U, BasicAllocator> other;
+        typedef sanitizing_allocator_base<U, BasicAllocator, CleanseFunc> other;
     };
 
     static void sanitize(T* p, size_t n)
     {
-        burn(p, n * sizeof(T));
-    }
-
-    virtual void cleanse(T* p, size_t n)
-    {
-        sanitize(p, n);
+        CleanseFunc(p, n * sizeof(T));
     }
 
     void deallocate(T* p, size_t n)
     {
-        cleanse(p, n);
+        CleanseFunc(p, n);
         BasicAllocator<T>::deallocate(p, n);
     }
 };
@@ -35,6 +31,9 @@ struct sanitizing_allocator_base : public BasicAllocator<T> {
 
 template <typename T>
 using sanitizing_allocator = sanitizing_allocator_base<T, std::allocator>;
+
+static_assert(sizeof(sanitizing_allocator<void>) == sizeof(std::allocator<void>),
+              "Size of sanitizing_allocator is not equal to size of std::allocator");
 
 
 template <typename Derived, template <typename, template <typename> typename> typename Base>

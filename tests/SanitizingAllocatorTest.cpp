@@ -20,36 +20,48 @@ MATCHER_P(EachIsZero, count, "All bytes are 0")
 
 
 template <typename T>
-class MockSanitizingAllocator : public sanitizing_allocator<T> {
-public:
-    MOCK_METHOD(void, cleanse,(T* p, size_t n), (override));
+class CleanseTest : public testing::Test {
+protected:
+    static bool cleanseCalled_;
+
+    void SetUp() override
+    {
+        cleanseCalled_ = false;
+    }
+
+    static void cleanseCalled(void*, size_t) noexcept
+    {
+        cleanseCalled_ = true;
+    }
 };
+template <typename T> bool CleanseTest<T>::cleanseCalled_;
+TYPED_TEST_SUITE_P(CleanseTest);
+
+TYPED_TEST_P(CleanseTest, DeallocateShouldCallCleanse)
+{
+    sanitizing_allocator_base<TypeParam, std::allocator, &CleanseTest<TypeParam>::cleanseCalled> allocator;
+
+    TypeParam* p = allocator.allocate(5);
+    allocator.deallocate(p, 5);
+
+    EXPECT_TRUE(CleanseTest<TypeParam>::cleanseCalled_);
+}
+
 
 template <typename T>
 class SanitizingAllocatorTest : public testing::Test {
 protected:
     void SetUp() override
     {
-        allocatorMock_ = std::make_unique<MockSanitizingAllocator<T>>();
         allocatorOrig_ = std::make_unique<sanitizing_allocator<T>>();
     }
 
     void TearDown() override
     {}
 
-    std::unique_ptr<MockSanitizingAllocator<T>> allocatorMock_;
     std::unique_ptr<sanitizing_allocator<T>> allocatorOrig_;
 };
-
 TYPED_TEST_SUITE_P(SanitizingAllocatorTest);
-
-TYPED_TEST_P(SanitizingAllocatorTest, DeallocateShouldCallCleanse)
-{
-    EXPECT_CALL(*this->allocatorMock_, cleanse(_, _)).Times(1);
-
-    TypeParam* ptr = this->allocatorMock_->allocate(5);
-    this->allocatorMock_->deallocate(ptr, 5);
-}
 
 TYPED_TEST_P(SanitizingAllocatorTest, CleanseShouldSetDataToNulls)
 {
@@ -57,14 +69,15 @@ TYPED_TEST_P(SanitizingAllocatorTest, CleanseShouldSetDataToNulls)
     TypeParam* ptr = this->allocatorOrig_->allocate(count);
     fillData<TypeParam>(ptr, count);
 
-    this->allocatorOrig_->cleanse(ptr, count);
+    this->allocatorOrig_->sanitize(ptr, count);
     ASSERT_THAT(ptr, EachIsZero(count));
 
     this->allocatorOrig_->deallocate(ptr, count);
 }
 
-REGISTER_TYPED_TEST_SUITE_P(SanitizingAllocatorTest,
-                            DeallocateShouldCallCleanse, CleanseShouldSetDataToNulls);
+REGISTER_TYPED_TEST_SUITE_P(CleanseTest, DeallocateShouldCallCleanse);
+REGISTER_TYPED_TEST_SUITE_P(SanitizingAllocatorTest, CleanseShouldSetDataToNulls);
 
 using TestingTypes = ::testing::Types<uint8_t, uint16_t, uint32_t, uint64_t, float, double>;
+INSTANTIATE_TYPED_TEST_SUITE_P(NumericInstantiation, CleanseTest, TestingTypes);
 INSTANTIATE_TYPED_TEST_SUITE_P(NumericInstantiation, SanitizingAllocatorTest, TestingTypes);
