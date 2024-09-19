@@ -173,4 +173,20 @@ inline decltype(auto) std_string_cast(SecureStringType&& str) noexcept
     }
 }
 
+template <typename StdStringType>
+[[nodiscard]]
+inline decltype(auto) secure_string_cast(StdStringType&& str) noexcept
+{
+    using CharT = typename std::remove_reference_t<StdStringType>::value_type;
+    using SecureStringType = basic_string_secure<CharT>;
+
+    static_assert(std::is_rvalue_reference_v<StdStringType&&>,
+                  "Only rvalue references are allowed for conversion to basic_string_secure");
+
+    static_assert(sizeof(SecureStringType) == sizeof(StdStringType),
+                  "Size of basic_string_secure<CharT> is not equal to size of std::basic_string<CharT>");
+
+    return reinterpret_cast<SecureStringType&&>(str);
+}
+
 #endif // BASIC_STRING_SECURE_H
