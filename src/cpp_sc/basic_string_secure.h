@@ -149,7 +149,19 @@ using u16string_secure = basic_string_secure<char16_t>;
 using u32string_secure = basic_string_secure<char32_t>;
 
 
+template <typename T>
+concept IsSecureString = requires {
+    typename T::value_type;
+} && std::is_same_v<T, basic_string_secure<typename T::value_type>>;
+
+template <typename T>
+concept IsStdString = requires {
+    typename T::value_type;
+} && std::is_same_v<T, std::basic_string<typename T::value_type>>;
+
+
 template <typename SecureStringType>
+    requires IsSecureString<std::remove_cvref_t<SecureStringType>>
 [[nodiscard]]
 inline decltype(auto) std_string_cast(SecureStringType&& str) noexcept
 {
@@ -174,6 +186,7 @@ inline decltype(auto) std_string_cast(SecureStringType&& str) noexcept
 }
 
 template <typename StdStringType>
+    requires IsStdString<std::remove_cvref_t<StdStringType>>
 [[nodiscard]]
 inline decltype(auto) secure_string_cast(StdStringType&& str) noexcept
 {
