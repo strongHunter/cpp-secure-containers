@@ -171,11 +171,11 @@ inline decltype(auto) std_string_cast(SecureStringType&& str) noexcept
     static_assert(sizeof(SecureStringType) == sizeof(StdStringType),
                   "Size of basic_string_secure<CharT> is not equal to size of std::basic_string<CharT>");
 
-    if constexpr (std::is_const_v<std::remove_reference_t<SecureStringType>> &&
-                  std::is_lvalue_reference_v<SecureStringType>) {
-        return reinterpret_cast<const StdStringType&>(str);
-    } else if constexpr (std::is_lvalue_reference_v<SecureStringType>) {
-        return reinterpret_cast<StdStringType&>(str);
+    if constexpr (std::is_lvalue_reference_v<SecureStringType>) {
+        if constexpr (std::is_const_v<std::remove_reference_t<SecureStringType>>)
+            return reinterpret_cast<const StdStringType&>(str);
+        else
+            return reinterpret_cast<StdStringType&>(str);
     } else {
         // static_assert(false) not working yet
         struct dependent_false : std::false_type {};
