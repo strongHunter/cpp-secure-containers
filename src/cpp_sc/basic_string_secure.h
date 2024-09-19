@@ -148,4 +148,29 @@ using u8string_secure = basic_string_secure<char8_t>;
 using u16string_secure = basic_string_secure<char16_t>;
 using u32string_secure = basic_string_secure<char32_t>;
 
+
+template <typename SecureStringType>
+[[nodiscard]]
+inline decltype(auto) std_string_cast(SecureStringType&& str) noexcept
+{
+    using CharT = typename std::remove_reference_t<SecureStringType>::value_type;
+    using StdStringType = std::basic_string<CharT>;
+
+    static_assert(sizeof(SecureStringType) == sizeof(StdStringType),
+                  "Size of basic_string_secure<CharT> is not equal to size of std::basic_string<CharT>");
+
+    if constexpr (std::is_const_v<std::remove_reference_t<SecureStringType>> &&
+                  std::is_lvalue_reference_v<SecureStringType>) {
+        return reinterpret_cast<const StdStringType&>(str);
+    } else if constexpr (std::is_lvalue_reference_v<SecureStringType>) {
+        return reinterpret_cast<StdStringType&>(str);
+    } else {
+        // static_assert(false) not working yet
+        struct dependent_false : std::false_type {};
+
+        static_assert(dependent_false::value,
+                      "Rvalue cannot be a type for cast");
+    }
+}
+
 #endif // BASIC_STRING_SECURE_H
