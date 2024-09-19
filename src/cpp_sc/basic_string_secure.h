@@ -161,7 +161,8 @@ concept IsStdString = requires {
 
 
 template <typename SecureStringType>
-    requires IsSecureString<std::remove_cvref_t<SecureStringType>>
+    requires IsSecureString<std::remove_cvref_t<SecureStringType>> &&
+             std::is_lvalue_reference_v<SecureStringType>
 [[nodiscard]]
 inline decltype(auto) std_string_cast(SecureStringType&& str) noexcept
 {
@@ -171,30 +172,20 @@ inline decltype(auto) std_string_cast(SecureStringType&& str) noexcept
     static_assert(sizeof(SecureStringType) == sizeof(StdStringType),
                   "Size of basic_string_secure<CharT> is not equal to size of std::basic_string<CharT>");
 
-    if constexpr (std::is_lvalue_reference_v<SecureStringType>) {
-        if constexpr (std::is_const_v<std::remove_reference_t<SecureStringType>>)
-            return reinterpret_cast<const StdStringType&>(str);
-        else
-            return reinterpret_cast<StdStringType&>(str);
-    } else {
-        // static_assert(false) not working yet
-        struct dependent_false : std::false_type {};
-
-        static_assert(dependent_false::value,
-                      "Rvalue cannot be a type for cast");
-    }
+    if constexpr (std::is_const_v<std::remove_reference_t<SecureStringType>>)
+        return reinterpret_cast<const StdStringType&>(str);
+    else
+        return reinterpret_cast<StdStringType&>(str);
 }
 
 template <typename StdStringType>
-    requires IsStdString<std::remove_cvref_t<StdStringType>>
+    requires IsStdString<std::remove_cvref_t<StdStringType>> &&
+             std::is_rvalue_reference_v<StdStringType&&>
 [[nodiscard]]
 inline decltype(auto) secure_string_cast(StdStringType&& str) noexcept
 {
     using CharT = typename std::remove_reference_t<StdStringType>::value_type;
     using SecureStringType = basic_string_secure<CharT>;
-
-    static_assert(std::is_rvalue_reference_v<StdStringType&&>,
-                  "Only rvalue references are allowed for conversion to basic_string_secure");
 
     static_assert(sizeof(SecureStringType) == sizeof(StdStringType),
                   "Size of basic_string_secure<CharT> is not equal to size of std::basic_string<CharT>");
