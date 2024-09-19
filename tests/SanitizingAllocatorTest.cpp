@@ -53,26 +53,26 @@ class SanitizingAllocatorTest : public testing::Test {
 protected:
     void SetUp() override
     {
-        allocatorOrig_ = std::make_unique<sanitizing_allocator<T>>();
+        allocator_ = std::make_unique<sanitizing_allocator<T>>();
     }
 
     void TearDown() override
     {}
 
-    std::unique_ptr<sanitizing_allocator<T>> allocatorOrig_;
+    std::unique_ptr<sanitizing_allocator<T>> allocator_;
 };
 TYPED_TEST_SUITE_P(SanitizingAllocatorTest);
 
 TYPED_TEST_P(SanitizingAllocatorTest, CleanseShouldSetDataToNulls)
 {
     const size_t count = 5;
-    TypeParam* ptr = this->allocatorOrig_->allocate(count);
+    TypeParam* ptr = this->allocator_->allocate(count);
     fillData<TypeParam>(ptr, count);
 
-    this->allocatorOrig_->sanitize(ptr, count);
+    this->allocator_->sanitize(ptr, count);
     ASSERT_THAT(ptr, EachIsZero(count));
 
-    this->allocatorOrig_->deallocate(ptr, count);
+    this->allocator_->deallocate(ptr, count);
 }
 
 REGISTER_TYPED_TEST_SUITE_P(CleanseTest, DeallocateShouldCallCleanse);
